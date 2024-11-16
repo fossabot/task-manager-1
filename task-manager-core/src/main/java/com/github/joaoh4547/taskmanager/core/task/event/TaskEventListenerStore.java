@@ -1,6 +1,7 @@
 package com.github.joaoh4547.taskmanager.core.task.event;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -37,11 +38,15 @@ public class TaskEventListenerStore {
      * Adds a task event listener for the specified task event type.
      *
      * @param eventType The type of task event to listen for.
-     * @param listener The TaskEventListener to be added for the specified event type.
+     * @param listener  The TaskEventListener to be added for the specified event type.
      */
     public void addTaskEventListener(TaskEventType eventType, TaskEventListener listener) {
         listeners.computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>()).add(listener);
     }
 
+
+    public Collection<TaskEventListener> getTaskEventListeners(TaskEventType eventType) {
+        return listeners.getOrDefault(eventType, Collections.emptyList());
+    }
 
 }

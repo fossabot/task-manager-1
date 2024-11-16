@@ -27,8 +27,7 @@ public class TaskEventEmitter {
      * @param event The TaskEvent to be fired.
      */
     public void fireEvent(TaskEvent event) {
-        TaskEventSubscriber subscriber = TaskEventSubscriber.getInstance();
-        subscriber.getListeners(event).forEach(x -> x.onTaskEvent(event));
+        TaskEventListenerStore.getInstance().getTaskEventListeners(event.type()).forEach(e -> e.onTaskEvent(event));
     }
 
 }

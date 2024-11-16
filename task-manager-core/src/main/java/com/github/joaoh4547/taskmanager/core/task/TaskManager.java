@@ -31,10 +31,11 @@ public class TaskManager {
         addListeners(event -> {
             Task<?> task = event.task();
             Process p = task.getProcess();
-            ProcessDAO.getInstance().save(p);
+            p = ProcessDAO.getInstance().save(p);
+            task.setProcess(p);
             TaskLogger.getInstance(task).log(LogType.INFO,
                                              String.format("Created Process of task %s", task.getTaskId()));
-        }, TaskEventType.QUEUED);
+        }, TaskEventType.CREATED_TASK);
 
         addListeners(event -> {
 

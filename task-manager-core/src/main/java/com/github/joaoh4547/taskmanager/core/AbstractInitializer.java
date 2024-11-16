@@ -55,11 +55,10 @@ public class AbstractInitializer implements Initializer {
             config.setPassword(Bundler.getValue("database.password", DATABASE_BUNDLE));
             config.setMaximumPoolSize(30);
             config.addDataSourceProperty("dataSource.logLevel", "INFO");
-            config.setLeakDetectionThreshold(10000);
             config.setMinimumIdle(10);
             config.setConnectionTimeout(30000);
             config.setIdleTimeout(600000);
-            config.setLeakDetectionThreshold(15000);
+            config.setLeakDetectionThreshold(2000);
             config.setConnectionTestQuery("SELECT 1 from dual");
 
             HikariDataSource ds = new HikariDataSource(config);

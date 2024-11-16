@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -20,14 +19,15 @@ public class Process {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "PROCESS_ID")
     private UUID id;
 
 
     @Column(name = "STARTED_TIME", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime startTime;
+    private LocalDateTime startTime = LocalDateTime.now();
 
     @Column(name = "END_TIME", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime endTime;
+    private LocalDateTime endTime = LocalDateTime.now();
 
     @Column(name = "NOM_PROCESS")
     private String name;
@@ -39,8 +39,9 @@ public class Process {
     /**
      * Represents a synchronized collection of ProcessLog instances associated with a Process.
      */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "process", targetEntity = ProcessLog.class)
-    private Collection<ProcessLog> logs = Collections.synchronizedCollection(new ArrayList<>());
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "process",
+            targetEntity = ProcessLog.class)
+    private Collection<ProcessLog> logs = new ArrayList<>();
 
     public Process() {
     }
@@ -61,7 +62,7 @@ public class Process {
      * @return an unmodifiable collection of ProcessLog instances
      */
     public Collection<ProcessLog> getLogs() {
-        return Collections.unmodifiableCollection(logs);
+        return logs;
     }
 
     /**

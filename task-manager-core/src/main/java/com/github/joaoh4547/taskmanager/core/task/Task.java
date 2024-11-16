@@ -26,7 +26,9 @@ public class Task<T> {
     public Task(TaskAction<T> action, String taskName) {
         this.taskId = TaskKeyGenerator.getTaskId();
         this.action = action;
+        this.process.setName(taskName);
     }
+
 
     public Process getProcess() {
         return process;

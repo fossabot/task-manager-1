@@ -13,10 +13,6 @@ public class TaskEventContext {
      */
     private final TaskEventEmitter eventEmitter;
 
-    /**
-     * Represents a subscriber for task events. Responsible for managing event listeners associated with specific task events.
-     */
-    private final TaskEventSubscriber eventSubscriber;
 
     /**
      * Represents task The task associated with the context.
@@ -32,7 +28,6 @@ public class TaskEventContext {
     public TaskEventContext(Task<?> task, TaskEventEmitter eventEmitter) {
         this.task = task;
         this.eventEmitter = eventEmitter;
-        this.eventSubscriber = TaskEventSubscriber.getInstance();
     }
 
     /**
@@ -42,16 +37,6 @@ public class TaskEventContext {
      */
     public void fireEvent(TaskEvent event) {
         eventEmitter.fireEvent(event);
-    }
-
-    /**
-     * Subscribes the provided TaskEventListener to the specified TaskEventType.
-     *
-     * @param type The type of task event to subscribe to.
-     * @param listener The listener to be subscribed.
-     */
-    public void subscribe(TaskEventType type, TaskEventListener listener) {
-        eventSubscriber.subscribe(type, task, listener);
     }
 
 

@@ -23,14 +23,17 @@ public abstract class AbstractMigrator implements Migrator {
         try {
             doMigrate(connection);
             status = MigrationStatus.SUCCESS;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             status = MigrationStatus.ERROR;
             LOG.error("Migration failed", e);
             migrated = false;
-        } finally {
+        }
+        finally {
             if (existsMigrated) {
                 updateStatus(connection, status);
-            } else {
+            }
+            else {
                 insertMigration(connection, status);
             }
         }
@@ -49,13 +52,17 @@ public abstract class AbstractMigrator implements Migrator {
         ResultSet resultSet = null;
         try {
             connection = DatabaseManager.getConnection();
-            statement = connection.prepareStatement("SELECT * FROM " + MIGRATION_TABLE + " WHERE MIGRATION_NAME =? AND MIGRATION_STATUS  = ?");
+            statement = connection.prepareStatement("SELECT * FROM " + MIGRATION_TABLE + " WHERE MIGRATION_NAME =? " +
+                                                            "AND MIGRATION_STATUS  = ?");
             statement.setString(1, getName());
             statement.setInt(2, MigrationStatus.SUCCESS.getCode());
             resultSet = statement.executeQuery();
             return resultSet.next();
-        } catch (SQLException ignored) {
-
+        }
+        catch (SQLException ignored) {
+        }
+        finally {
+            JdbcUtil.close(connection, statement, resultSet);
         }
         return false;
     }
@@ -72,9 +79,11 @@ public abstract class AbstractMigrator implements Migrator {
             ps.setString(1, getName());
             ps.setInt(2, status.getCode());
             ps.executeUpdate();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error(e.getMessage(), e);
-        } finally {
+        }
+        finally {
             JdbcUtil.close(ps);
         }
     }
@@ -83,15 +92,18 @@ public abstract class AbstractMigrator implements Migrator {
     public void updateStatus(Connection connection, MigrationStatus status) {
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE " + MIGRATION_TABLE + " set MIGRATION_STATUS =?, MIGRATION_UPDATED_AT =? WHERE MIGRATION_NAME =?";
+            String sql = "UPDATE " + MIGRATION_TABLE + " set MIGRATION_STATUS =?, MIGRATION_UPDATED_AT =? WHERE " +
+                    "MIGRATION_NAME =?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, status.getCode());
             ps.setDate(2, new Date(System.currentTimeMillis()));
             ps.setString(3, getName());
             ps.executeUpdate();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error(e.getMessage(), e);
-        } finally {
+        }
+        finally {
             JdbcUtil.close(ps);
         }
     }
@@ -106,9 +118,11 @@ public abstract class AbstractMigrator implements Migrator {
             ps.setString(1, getName());
             rs = ps.executeQuery();
             return rs.next();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error(e.getMessage(), e);
-        } finally {
+        }
+        finally {
             JdbcUtil.close(ps, rs);
         }
 

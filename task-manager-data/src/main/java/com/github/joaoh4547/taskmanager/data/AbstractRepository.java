@@ -40,12 +40,20 @@ public abstract class AbstractRepository<T, R> implements Repository<T, R> {
     }
 
     @Override
-    public synchronized void save(T entity) {
+    public synchronized T save(T entity) {
+        EntityTransaction t = null;
         try (EntityManager em = getEntityManager()) {
-            EntityTransaction t = em.getTransaction();
+            t = em.getTransaction();
             t.begin();
-            em.persist(entity);
+            T merged = em.merge(entity);
             t.commit();
+            return merged;
+        }
+        catch (Exception e) {
+            if (t != null && t.isActive()) {
+                t.rollback();
+            }
+            throw new RuntimeException(e);
         }
     }
 

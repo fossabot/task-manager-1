@@ -21,7 +21,7 @@ public interface Repository<T, K> {
      *
      * @param entity The entity to be saved.
      */
-    void save(T entity);
+    T save(T entity);
 
     /**
      * Deletes the entity in the repository identified by the provided key.

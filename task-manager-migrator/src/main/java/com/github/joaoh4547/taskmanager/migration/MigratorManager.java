@@ -44,8 +44,8 @@ public class MigratorManager {
      * @throws MigrationException if any exception occurs during the migration process
      */
     public void runMigrations() {
-        try {
-            Connection connection = DatabaseManager.getConnection();
+        try (Connection connection = DatabaseManager.getConnection()) {
+
             if (!isTableExists(connection)) {
                 createMigrationTable(connection);
             }
@@ -103,6 +103,7 @@ public class MigratorManager {
             if (successMigrate) {
                 LOG.info("Migrations completed");
             }
+
         }
         catch (Exception e) {
             throw new MigrationException(e.getMessage(), e);

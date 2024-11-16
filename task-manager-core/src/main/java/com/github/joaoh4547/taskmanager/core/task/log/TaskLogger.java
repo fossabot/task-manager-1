@@ -1,6 +1,8 @@
 package com.github.joaoh4547.taskmanager.core.task.log;
 
 import com.github.joaoh4547.taskmanager.core.process.LogType;
+import com.github.joaoh4547.taskmanager.core.process.Process;
+import com.github.joaoh4547.taskmanager.core.process.ProcessDAO;
 import com.github.joaoh4547.taskmanager.core.process.ProcessLog;
 import com.github.joaoh4547.taskmanager.core.task.Task;
 import org.slf4j.Logger;
@@ -26,8 +28,10 @@ public class TaskLogger<T> {
     }
 
     public void log(LogType logType, String message) {
-        ProcessLog log = new ProcessLog(message, logType, task.getProcess());
-        task.getProcess().addLog(log);
+        Process process = task.getProcess();
+        ProcessLog log = new ProcessLog(message, logType, process);
+        process.addLog(log);
+        ProcessDAO.getInstance().save(process);
     }
 
     public void log(LogType logType, String message, boolean sendNotify) {

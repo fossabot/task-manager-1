@@ -12,7 +12,6 @@ public class Application extends AbstractInitializer {
      * This method starts the application by initializing the database and executing the main logic.
      */
     public void start() {
-        ReflectionUtils.test();
         onInitialize();
         run();
     }

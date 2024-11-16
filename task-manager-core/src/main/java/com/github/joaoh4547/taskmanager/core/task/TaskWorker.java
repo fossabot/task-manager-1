@@ -78,9 +78,6 @@ public class TaskWorker {
     @SafeVarargs
     public final <T> void addTask(Collection<Task<T>> tasks, TaskExecutionListener<T>... listeners) {
         lock.lock();
-        tasks.forEach(task -> {
-            TaskEventEmitter.getInstance().fireEvent(TaskEvent.createTaskEvent(TaskEventType.CREATED_TASK, task));
-        });
         TaskRegistry<T> registry = createRegistry(tasks, listeners);
         SubWorker<T> worker = new SubWorker<>(registry);
         try {
@@ -133,12 +130,16 @@ public class TaskWorker {
 
     @SafeVarargs
     public final <T> void addTask(Task<T> task, TaskExecutionListener<T>... listeners) {
+        TaskEventEmitter.getInstance().fireEvent(TaskEvent.createTaskEvent(TaskEventType.CREATED_TASK, task));
         addTask(Collections.singletonList(task), listeners);
     }
 
 
     public <T> void addTask(Collection<Task<T>> tasks) {
         TaskExecutionListener<T>[] listeners = new TaskExecutionListener[0];
+        tasks.forEach(task -> {
+            TaskEventEmitter.getInstance().fireEvent(TaskEvent.createTaskEvent(TaskEventType.CREATED_TASK, task));
+        });
         addTask(tasks, listeners);
     }
 
@@ -149,6 +150,9 @@ public class TaskWorker {
 
     @SafeVarargs
     public final <T> void addTask(TaskExecutionListener<T> listener, Task<T>... tasks) {
+        Arrays.asList(tasks).forEach(task -> {
+            TaskEventEmitter.getInstance().fireEvent(TaskEvent.createTaskEvent(TaskEventType.CREATED_TASK, task));
+        });
         addTask(Arrays.asList(tasks), listener);
     }
 
