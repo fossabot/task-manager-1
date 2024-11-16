@@ -15,6 +15,7 @@
         <module>task-manager-migrator</module>
         <module>task-manager-demo</module>
         <module>task-manager-infra</module>
+        <module>task-manager-swing</module>
     </modules>
 
     <properties>
