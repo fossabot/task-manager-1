@@ -10,9 +10,6 @@ jobs:
   build:
     name: issue metrics
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: read
     steps:
       - name: Get dates for last month
         shell: bash
