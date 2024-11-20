@@ -1,17 +1,18 @@
 package com.github.joaoh4547.taskmanager.core.process;
 
-import com.github.joaoh4547.taskmanager.data.AbstractRepository;
-
 import java.util.UUID;
 
-public class ProcessDAO extends AbstractRepository<Process, UUID> {
+import com.github.joaoh4547.taskmanager.data.AbstractRepository;
 
-    protected ProcessDAO() {
-        super(Process.class);
-    }
+public class ProcessDAO
+  extends AbstractRepository<Process, UUID> {
 
-    public static ProcessDAO getInstance() {
-        return new ProcessDAO();
-    }
+  protected ProcessDAO() {
+    super(Process.class);
+  }
+
+  public static ProcessDAO getInstance() {
+    return new ProcessDAO();
+  }
 
 }

@@ -1,5 +1,7 @@
 package com.github.joaoh4547.taskmanager.data;
 
+import java.util.Collection;
+
 /**
  * An interface representing a generic repository for entities.
  *
@@ -46,5 +48,6 @@ public interface Repository<T, K> {
      */
     boolean exists(K key);
 
+    Collection<T> loadAll();
 
 }

@@ -84,7 +84,7 @@ public class ReflectionUtils {
         }
     }
 
-    private static <T> Collection<Class<? extends T>> getSubclasses(Class<T> targetClass) {
+    public static <T> Collection<Class<? extends T>> getSubclasses(Class<T> targetClass) {
         return reflections.getSubTypesOf(targetClass);
     }
 
