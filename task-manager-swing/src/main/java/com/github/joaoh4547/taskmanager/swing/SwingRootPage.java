@@ -7,8 +7,6 @@ public abstract class SwingRootPage
   extends JFrame {
 
   public SwingRootPage() {
-    setLayout(new BorderLayout());
-
     Container pane = getContentPane();
     setTitle(getAppName());
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -17,6 +15,10 @@ public abstract class SwingRootPage
     JPanel panel = new JPanel();
     panel.add(new JLabel(getPageName()));
     pane.add(panel);
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+    setSize(screenSize);
+
   }
 
   public abstract String getAppName();

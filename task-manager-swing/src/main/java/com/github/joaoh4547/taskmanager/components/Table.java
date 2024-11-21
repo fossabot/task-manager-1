@@ -24,6 +24,7 @@ public class Table<T>
     model = new GenericTableModel();
     createColumns();
     table = new JTable(model);
+    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     setLayout(new BorderLayout());
     JScrollPane scrollPane = new JScrollPane(table);

@@ -56,12 +56,13 @@ public class MenuGenerator {
     JMenuItem menuItem = new JMenuItem(page.name());
     menuItem.setToolTipText(page.description());
     menuItem.addActionListener(e -> {
-      AbstractSwingPage p = ReflectionUtils.newInstance(clazz);
-      p.setVisible(true);
-      p.setLocationRelativeTo(parent);
-      p.setAlwaysOnTop(true);
-      p.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-      p.setSize(new Dimension(600, 600));
+      JPanel p = ReflectionUtils.newInstance(clazz);
+      JDialog dialog = new JDialog(parent);
+      dialog.getContentPane().add(p);
+      dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+      dialog.setSize(new Dimension(600, 600));
+      dialog.setVisible(true);
+
       // p.setP
       String title = null;
       if (StringUtils.isEmpty(page.description())) {
@@ -69,7 +70,7 @@ public class MenuGenerator {
       } else {
         title = String.format("%s - %s", page.name(), page.description());
       }
-      p.setTitle(title);
+      dialog.setTitle(title);
     });
     return menuItem;
   }

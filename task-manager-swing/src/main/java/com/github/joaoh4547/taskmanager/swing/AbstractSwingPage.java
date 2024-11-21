@@ -1,10 +1,11 @@
 package com.github.joaoh4547.taskmanager.swing;
 
-import javax.swing.*;
 import java.awt.*;
 
+import javax.swing.*;
+
 public abstract class AbstractSwingPage
-  extends JFrame {
+  extends JPanel {
 
   public AbstractSwingPage() {
     setLayout(new BorderLayout());
