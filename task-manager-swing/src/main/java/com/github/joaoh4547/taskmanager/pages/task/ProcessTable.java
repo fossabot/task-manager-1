@@ -6,8 +6,8 @@ import com.github.joaoh4547.taskmanager.core.process.Process;
 public class ProcessTable
   extends Table<Process> {
 
-  public ProcessTable() {
+  @Override
+  protected void createColumns() {
     addColumn("name", "Nome");
   }
-
 }

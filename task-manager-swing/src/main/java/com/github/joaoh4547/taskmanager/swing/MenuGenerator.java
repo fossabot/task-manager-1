@@ -24,7 +24,7 @@ public class MenuGenerator {
    * @return a JMenuBar populated with menus and menu items corresponding to the
    *         pages' details
    */
-  public static JMenuBar generateMenu() {
+  public static JMenuBar generateMenu(JFrame parent) {
     Collection<Class<? extends AbstractSwingPage>> classes = ReflectionUtils
         .getSubclasses(AbstractSwingPage.class);
 
@@ -42,7 +42,7 @@ public class MenuGenerator {
       for (Class<? extends AbstractSwingPage> clazz : classes) {
         Page page = clazz.getAnnotation(Page.class);
         if (page.pageGroup().equals(pageGroup)) {
-          menu.add(createMenuItem(clazz, page));
+          menu.add(createMenuItem(clazz, page, parent));
         }
       }
     }
@@ -52,15 +52,17 @@ public class MenuGenerator {
   }
 
   private static JMenuItem createMenuItem(Class<? extends AbstractSwingPage> clazz,
-                                          Page page) {
+                                          Page page, JFrame parent) {
     JMenuItem menuItem = new JMenuItem(page.name());
     menuItem.setToolTipText(page.description());
     menuItem.addActionListener(e -> {
       AbstractSwingPage p = ReflectionUtils.newInstance(clazz);
       p.setVisible(true);
-//      p.setLocationRelativeTo(null);
-
+      p.setLocationRelativeTo(parent);
+      p.setAlwaysOnTop(true);
+      p.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
       p.setSize(new Dimension(600, 600));
+      // p.setP
       String title = null;
       if (StringUtils.isEmpty(page.description())) {
         title = page.name();

@@ -1,45 +1,20 @@
 package com.github.joaoh4547.taskmanager.components;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
-import javax.swing.table.AbstractTableModel;
+public class GenericTableModel
+  extends DefaultTableModel {
 
-public abstract class GenericTableModel<T>
-  extends AbstractTableModel {
-
-  private final Collection<T> itens;
-
-  protected GenericTableModel() {
-    this.itens = new ArrayList<>();
+  public GenericTableModel() {
+    super();
   }
 
-  public void addItem(T item) {
-    itens.add(item);
-    fireTableRowsInserted(itens.size() - 1, itens.size() - 1);
+  public GenericTableModel(Object[][] objectArray, String[] columns) {
+    super(objectArray, columns);
   }
 
-  public void removeItem(int index) {
-    if (index >= 0 && index < itens.size()) {
-      getItemsAsList().remove(index);
-      fireTableRowsDeleted(index, index);
-    }
-  }
-
-  public T getItem(int index) {
-    return getItemsAsList().get(index);
-  }
-
-  public List<T> getItemsAsList() {
-    return new ArrayList<>(itens);
-  }
-
-  public int getRowCount() {
-    return itens.size();
-  }
-
-  public Collection<T> getItens() {
-    return itens;
+  @Override
+  public boolean isCellEditable(int row, int column) {
+    return false;
   }
 }
