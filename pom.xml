@@ -16,6 +16,7 @@
         <module>task-manager-demo</module>
         <module>task-manager-infra</module>
         <module>task-manager-swing</module>
+        <module>task-manager-components</module>
     </modules>
 
     <properties>
