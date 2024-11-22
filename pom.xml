@@ -36,6 +36,7 @@
         <HikariCP.version>6.2.1</HikariCP.version>
         <logback-classic.version>1.5.12</logback-classic.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <junit.version>5.11.3</junit.version>
     </properties>
 
     <dependencies>
@@ -88,6 +89,18 @@
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
             <version>${classgraph.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
 
