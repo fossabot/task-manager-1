@@ -112,7 +112,7 @@ public class DataValidatorBuilder<T>
      * @param object the object to be validated
      */
     @Override
-    void validate(T object) {
+    public void validate(T object) {
       validator.validate(object);
     }
   }
