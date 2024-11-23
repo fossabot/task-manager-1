@@ -38,9 +38,9 @@ public abstract class DataValidator<T> {
    *
    * @param object the object to be validated
    */
-  abstract void validate(T object);
+  public abstract void validate(T object);
 
-  void validate(Collection<T> objects) {
+  public void validate(Collection<T> objects) {
     for (T object : objects) {
       validate(object);
     }

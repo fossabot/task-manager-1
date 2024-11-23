@@ -1,4 +1,4 @@
-package com.github.joaoh4547.taskmanager.components;
+package com.github.joaoh4547.taskmanager.components.ui.table;
 
 import java.util.Collection;
 

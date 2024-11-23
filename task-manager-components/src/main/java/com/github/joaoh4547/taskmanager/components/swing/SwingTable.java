@@ -9,8 +9,8 @@ import javax.swing.event.TableModelEvent;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.joaoh4547.taskmanager.components.Table;
-import com.github.joaoh4547.taskmanager.components.TableColumn;
+import com.github.joaoh4547.taskmanager.components.ui.table.Table;
+import com.github.joaoh4547.taskmanager.components.ui.table.TableColumn;
 import com.github.joaoh4547.taskmanager.utils.Objects;
 
 public abstract class SwingTable<T>
