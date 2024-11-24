@@ -2,7 +2,11 @@ package com.github.joaoh4547.taskmanager.data;
 
 import java.util.Collection;
 
+import org.ehcache.Cache;
+
+import com.github.joaoh4547.taskmanager.cache.EhcacheManager;
 import com.github.joaoh4547.taskmanager.db.JpaManager;
+import com.github.joaoh4547.taskmanager.utils.ReflectionUtils;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -10,19 +14,37 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 /**
- * An abstract class that serves as a base class for JDBC repositories. It
- * implements the Repository interface to provide common repository
- * functionalities.
+ * AbstractJPARepository is an abstract class that provides basic CRUD
+ * operations for entities using the Java Persistence API (JPA). This class
+ * implements the Repository interface and provides a set of synchronized
+ * methods to interact with the database.
  *
- * @param <T> The type of entity stored in the repository.
- * @param <R> The type of key used to identify entities in the repository.
+ * @param <T> The type of entity.
+ * @param <R> The type of key used to identify the entity.
  */
-public abstract class AbstractRepository<T, R>
+public abstract class AbstractJPARepository<T, R>
   implements Repository<T, R> {
 
-  private final Class<T> entityClass;
+  private Cache<T, R> cache;
 
-  private EntityManagerFactory getEntityManagerFactory() {
+  private EntityManagerFactory entityManagerFactory;
+
+  protected AbstractJPARepository() {
+    init();
+  }
+
+  void init() {
+    entityManagerFactory = configureEntityManagerFactory();
+    cache = createCache();
+  }
+
+  private Cache<T, R> createCache() {
+    return EhcacheManager.getInstance()
+        .createCache(getEntityClass().getName(), getEntityClass(),
+                     getKeyClass());
+  }
+
+  private EntityManagerFactory configureEntityManagerFactory() {
     return JpaManager.getInstance().getEntityManagerFactory();
   }
 
@@ -30,18 +52,22 @@ public abstract class AbstractRepository<T, R>
     return getEntityManagerFactory().createEntityManager();
   }
 
-  protected AbstractRepository(Class<T> entityClass) {
-    this.entityClass = entityClass;
+  private EntityManagerFactory getEntityManagerFactory() {
+    return entityManagerFactory;
   }
 
   private Class<T> getEntityClass() {
-    return this.entityClass;
+    return ReflectionUtils.getGenericParamAt(getClass(), 0);
+  }
+
+  private Class<R> getKeyClass() {
+    return ReflectionUtils.getGenericParamAt(getClass(), 1);
   }
 
   @Override
   public synchronized T find(R key) {
     EntityManager em = getEntityManager();
-    return em.find(entityClass, key);
+    return em.find(getEntityClass(), key);
   }
 
   @Override
@@ -64,7 +90,7 @@ public abstract class AbstractRepository<T, R>
   @Override
   public synchronized void deleteByKey(R key) {
     EntityManager em = getEntityManager();
-    T entity = em.find(entityClass, key);
+    T entity = em.find(getEntityClass(), key);
     if (entity != null) {
       EntityTransaction t = em.getTransaction();
       t.begin();
@@ -88,14 +114,14 @@ public abstract class AbstractRepository<T, R>
   @Override
   public synchronized boolean exists(R key) {
     EntityManager em = getEntityManager();
-    T entity = em.find(entityClass, key);
+    T entity = em.find(getEntityClass(), key);
     return entity != null;
   }
 
   @Override
   public synchronized Collection<T> loadAll() {
     TypedQuery<T> typedQuery = getEntityManager()
-        .createQuery("select p from Process p", entityClass);
+        .createQuery("select p from Process p", getEntityClass());
     return typedQuery.getResultList();
   }
 }

@@ -10,13 +10,32 @@
     </parent>
 
     <artifactId>task-manager-cache</artifactId>
+    <properties>
+        <ehcache.version>3.10.8</ehcache.version>
+        <jedis.version>5.0.2</jedis.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-            <version>3.10.8</version>
+            <version>${ehcache.version}</version>
             <classifier>jakarta</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache-clustered</artifactId>
+            <version>${ehcache.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.joaoh4547.taskmanager</groupId>
+            <artifactId>task-manager-infra</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

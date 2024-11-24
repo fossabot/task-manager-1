@@ -21,8 +21,8 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <reflections.version>0.10.2</reflections.version>
         <hibernate-core.version>7.0.0.Beta1</hibernate-core.version>
@@ -38,6 +38,11 @@
         <logback-classic.version>1.5.12</logback-classic.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <junit.version>5.11.3</junit.version>
+        <aspectj.version>1.9.22.1</aspectj.version>
+        <aspectj-maven-plugin.version>1.15.0</aspectj-maven-plugin.version>
+        <java.version>21</java.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <jaxb.version>3.0.1</jaxb.version>
     </properties>
 
     <dependencies>
@@ -103,7 +108,16 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -128,14 +142,16 @@
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>3.0.1</version> <!-- ou versão desejada -->
+                <version>${jaxb.version}</version> <!-- ou versão desejada -->
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
-                <version>3.0.1</version> <!-- mesma versão da API -->
+                <version>${jaxb.version}</version> <!-- mesma versão da API -->
             </dependency>
         </dependencies>
+
+
     </dependencyManagement>
 
 
@@ -144,10 +160,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>${maven-jar-plugin.version}</version>
                 <configuration>
-                    <!-- Specify the main class if needed -->
-
                     <archive>
                         <manifest>
                             <mainClass>com.github.joaoh4547.taskmanager.Main</mainClass>
@@ -155,6 +169,22 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>dev.aspectj</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.14</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjtools</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <complianceLevel>21</complianceLevel>
+                </configuration>
+            </plugin>
+
         </plugins>
         <resources>
             <resource>
