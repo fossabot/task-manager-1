@@ -118,7 +118,11 @@
             <artifactId>aspectjtools</artifactId>
             <version>${aspectj.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
     </dependencies>
 
 
@@ -150,10 +154,7 @@
                 <version>${jaxb.version}</version> <!-- mesma versão da API -->
             </dependency>
         </dependencies>
-
-
     </dependencyManagement>
-
 
     <build>
         <plugins>
@@ -184,7 +185,6 @@
                     <complianceLevel>21</complianceLevel>
                 </configuration>
             </plugin>
-
         </plugins>
         <resources>
             <resource>
@@ -195,13 +195,10 @@
             </resource>
         </resources>
     </build>
-
     <repositories>
         <repository>
             <id>central</id>
             <url>https://repo1.maven.org/maven2</url>
         </repository>
     </repositories>
-
-
 </project>
