@@ -17,6 +17,7 @@
         <module>task-manager-infra</module>
         <module>task-manager-swing</module>
         <module>task-manager-components</module>
+        <module>task-manager-cache</module>
     </modules>
 
     <properties>
@@ -124,7 +125,16 @@
                 <artifactId>hibernate-validator</artifactId>
                 <version>${hibernate-validator.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>3.0.1</version> <!-- ou versão desejada -->
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>3.0.1</version> <!-- mesma versão da API -->
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -155,6 +165,13 @@
             </resource>
         </resources>
     </build>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+    </repositories>
 
 
 </project>
