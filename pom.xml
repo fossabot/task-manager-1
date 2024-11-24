@@ -15,66 +15,92 @@
         <module>task-manager-migrator</module>
         <module>task-manager-demo</module>
         <module>task-manager-infra</module>
+        <module>task-manager-swing</module>
+        <module>task-manager-components</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mail.hostname>smtp.example.com</mail.hostname>
-        <default.worker.number>24</default.worker.number>
+        <reflections.version>0.10.2</reflections.version>
+        <hibernate-core.version>7.0.0.Beta1</hibernate-core.version>
+        <hibernate-validator.version>9.0.0.Beta3</hibernate-validator.version>
+        <classgraph.version>4.8.179</classgraph.version>
+        <guava.version>33.3.1-jre</guava.version>
+        <jboss-logging.version>3.6.1.Final</jboss-logging.version>
+        <commons-collections4.version>4.5.0-M2</commons-collections4.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons-email.version>1.6.0</commons-email.version>
+        <ojdbc11.version>23.6.0.24.10</ojdbc11.version>
+        <HikariCP.version>6.2.1</HikariCP.version>
+        <logback-classic.version>1.5.12</logback-classic.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <junit.version>5.11.3</junit.version>
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
+        </dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.12</version>
+            <version>${logback-classic.version}</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>6.2.1</version>
+            <version>${HikariCP.version}</version>
         </dependency>
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
-            <version>23.6.0.24.10</version>
+            <version>${ojdbc11.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-email</artifactId>
-            <version>1.6.0</version>
+            <version>${commons-email.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.17.0</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>commons-beanutils</groupId>-->
-        <!--            <artifactId>commons-beanutils</artifactId>-->
-        <!--            <version>1.9.4</version>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-            <version>4.5.0-M2</version>
+            <version>${commons-collections4.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
-            <version>3.6.1.Final</version>
+            <version>${jboss-logging.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.3.1-jre</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
-            <version>4.8.179</version>
+            <version>${classgraph.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
 
@@ -86,17 +112,17 @@
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
-                <version>0.10.2</version>
+                <version>${reflections.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate.orm</groupId>
                 <artifactId>hibernate-core</artifactId>
-                <version>7.0.0.Beta2</version>
+                <version>${hibernate-core.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>9.0.0.Beta3</version>
+                <version>${hibernate-validator.version}</version>
             </dependency>
 
         </dependencies>
@@ -111,6 +137,7 @@
                 <version>3.4.2</version>
                 <configuration>
                     <!-- Specify the main class if needed -->
+
                     <archive>
                         <manifest>
                             <mainClass>com.github.joaoh4547.taskmanager.Main</mainClass>
@@ -119,12 +146,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <!--        <resources>-->
-        <!--            <resource>-->
-        <!--                <directory>src/main/resources</directory>-->
-        <!--                <filtering>true</filtering>-->
-        <!--            </resource>-->
-        <!--        </resources>-->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -134,5 +155,6 @@
             </resource>
         </resources>
     </build>
+
 
 </project>
