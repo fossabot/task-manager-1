@@ -1,6 +1,6 @@
 package com.github.joaoh4547.taskmanager.utils;
 
-import org.apache.commons.beanutils.BeanUtilsBean2;
+import org.apache.commons.beanutils.BeanUtils;
 
 public class Objects {
 
@@ -13,7 +13,7 @@ public class Objects {
 
   public static <T> Object getValue(T obj, String propertyName) {
     try {
-      return BeanUtilsBean2.getInstance().getProperty(obj, propertyName);
+      return BeanUtils.getProperty(obj, propertyName);
     } catch (Exception e) {
       return null;
     }
