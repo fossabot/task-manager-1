@@ -35,7 +35,7 @@
         <ojdbc11.version>23.6.0.24.10</ojdbc11.version>
         <HikariCP.version>6.2.1</HikariCP.version>
         <logback-classic.version>1.5.12</logback-classic.version>
-        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <commons-beanutils.version>20030211.134440</commons-beanutils.version>
         <junit.version>5.11.3</junit.version>
     </properties>
 
