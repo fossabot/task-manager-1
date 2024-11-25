@@ -1,17 +1,17 @@
 package com.github.joaoh4547.taskmanager.data;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.ehcache.Cache;
+import org.ehcache.Cache.Entry;
 
 import com.github.joaoh4547.taskmanager.cache.EhcacheManager;
 import com.github.joaoh4547.taskmanager.db.JpaManager;
 import com.github.joaoh4547.taskmanager.utils.ReflectionUtils;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 
 /**
  * AbstractJPARepository is an abstract class that provides basic CRUD
@@ -25,7 +25,7 @@ import jakarta.persistence.TypedQuery;
 public abstract class AbstractJPARepository<T, R>
   implements Repository<T, R> {
 
-  private Cache<T, R> cache;
+  private Cache<R, T> cache;
 
   private EntityManagerFactory entityManagerFactory;
 
@@ -38,10 +38,10 @@ public abstract class AbstractJPARepository<T, R>
     cache = createCache();
   }
 
-  private Cache<T, R> createCache() {
+  private Cache<R, T> createCache() {
     return EhcacheManager.getInstance()
-        .createCache(getEntityClass().getName(), getEntityClass(),
-                     getKeyClass());
+        .createCache(getEntityClass().getName(), getKeyClass(),
+                     getEntityClass());
   }
 
   private EntityManagerFactory configureEntityManagerFactory() {
@@ -66,6 +66,9 @@ public abstract class AbstractJPARepository<T, R>
 
   @Override
   public synchronized T find(R key) {
+    if (cache.containsKey(key)) {
+      return cache.get(key);
+    }
     EntityManager em = getEntityManager();
     return em.find(getEntityClass(), key);
   }
@@ -78,6 +81,7 @@ public abstract class AbstractJPARepository<T, R>
       t.begin();
       T merged = em.merge(entity);
       t.commit();
+      cache.put(extractKey(entity), merged);
       return merged;
     } catch (Exception e) {
       if (t != null && t.isActive()) {
@@ -85,6 +89,23 @@ public abstract class AbstractJPARepository<T, R>
       }
       throw new RuntimeException(e);
     }
+  }
+
+  private R extractKey(T entity) {
+    Field f = ReflectionUtils.getFieldWithAnnotation(getEntityClass(),
+                                                     Id.class);
+    if (f != null) {
+      f.setAccessible(true);
+      try {
+        Object key = f.get(entity);
+        if (ReflectionUtils.isSubtypeOf(key.getClass(), getKeyClass())) {
+          return getKeyClass().cast(key);
+        }
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return null;
   }
 
   @Override
@@ -96,6 +117,7 @@ public abstract class AbstractJPARepository<T, R>
       t.begin();
       em.remove(entity);
       t.commit();
+      cache.remove(key);
     }
   }
 
@@ -109,10 +131,14 @@ public abstract class AbstractJPARepository<T, R>
     t.begin();
     em.remove(entity);
     t.commit();
+    cache.remove(extractKey(entity));
   }
 
   @Override
   public synchronized boolean exists(R key) {
+    if (cache.containsKey(key)) {
+      return true;
+    }
     EntityManager em = getEntityManager();
     T entity = em.find(getEntityClass(), key);
     return entity != null;
@@ -120,8 +146,16 @@ public abstract class AbstractJPARepository<T, R>
 
   @Override
   public synchronized Collection<T> loadAll() {
-    TypedQuery<T> typedQuery = getEntityManager()
-        .createQuery("select p from Process p", getEntityClass());
-    return typedQuery.getResultList();
+    Collection<T> results = new ArrayList<>();
+    if (!cache.iterator().hasNext()) {
+      TypedQuery<T> typedQuery = getEntityManager()
+          .createQuery("select p from Process p", getEntityClass());
+      results = typedQuery.getResultList();
+    } else {
+      for (Entry<R, T> entry : cache) {
+        results.add(entry.getValue());
+      }
+    }
+    return results;
   }
 }

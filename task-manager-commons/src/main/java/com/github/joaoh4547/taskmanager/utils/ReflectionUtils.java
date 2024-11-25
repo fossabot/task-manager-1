@@ -43,6 +43,15 @@ public class ReflectionUtils {
       throw new RuntimeException(e);
     }
   }
+  
+  public static <T extends Annotation> Field getFieldWithAnnotation(Class<?> clazz, Class<T> annotation) {
+    for (Field field : clazz.getDeclaredFields()) {
+      if (field.isAnnotationPresent(annotation)) {
+        return field;
+      }
+    }
+    return null;
+  }
 
   public static <T> T newInstanceWithArgs(Class<T> clazz, Object... args) {
     try {

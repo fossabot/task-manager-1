@@ -43,7 +43,8 @@ public class JpaManager {
     properties.put(AvailableSettings.SHOW_SQL, "true");
     properties.put(AvailableSettings.FORMAT_SQL, "true");
     properties.put(AvailableSettings.HIGHLIGHT_SQL, "true");
-    properties.put(AvailableSettings.JTA_PLATFORM, "JTA");
+    properties.put(AvailableSettings.USE_SQL_COMMENTS, "true");
+    properties.put(AvailableSettings.JAKARTA_TRANSACTION_TYPE, "RESOURCE_LOCAL");
     hibernateConfiguration.setProperties(properties);
 
     for (Class<?> clazz : ReflectionUtils
