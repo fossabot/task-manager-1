@@ -25,41 +25,101 @@ import jakarta.persistence.*;
 public abstract class AbstractJPARepository<T, R>
   implements Repository<T, R> {
 
+  /**
+   * A cache for storing entities and their corresponding keys, intended to
+   * improve performance by reducing the number of database accesses. This cache
+   * is expected to be initialized along with the entity manager factory in the
+   * {@code init} method.
+   */
   private Cache<R, T> cache;
 
+  /**
+   * Represents the factory for creating and managing {@link EntityManager}
+   * instances.
+   * <p>
+   * This factory is responsible for setting up the persistence context and
+   * providing entity managers that interact with the underlying database. It is
+   * initialized in the {@code init()} method by calling
+   * {@link #configureEntityManagerFactory()}.
+   * </p>
+   */
   private EntityManagerFactory entityManagerFactory;
 
+  /**
+   * Initializes the AbstractJPARepository. This constructor calls the
+   * {@code init} method to configure the EntityManagerFactory and create the
+   * cache required for managing entities and their lifecycle.
+   */
   protected AbstractJPARepository() {
     init();
   }
 
+  /**
+   * Initializes the necessary components for the repository. This method
+   * configures the EntityManagerFactory and creates a cache to manage entities
+   * and their lifecycle within the repository.
+   */
   void init() {
     entityManagerFactory = configureEntityManagerFactory();
     cache = createCache();
   }
 
+  /**
+   * Creates and returns a cache for entities managed by this repository. The
+   * cache is created using the EhcacheManager instance, with the cache name
+   * derived from the entity class' name, and the key and value types specified
+   * by the repository's key and entity classes.
+   *
+   * @return A Cache instance for storing entities managed by this repository.
+   */
   private Cache<R, T> createCache() {
     return EhcacheManager.getInstance()
         .createCache(getEntityClass().getName(), getKeyClass(),
                      getEntityClass());
   }
 
+  /**
+   * Configures and retrieves the EntityManagerFactory instance used to interact
+   * with the persistence context.
+   *
+   * @return The configured EntityManagerFactory instance.
+   */
   private EntityManagerFactory configureEntityManagerFactory() {
     return JpaManager.getInstance().getEntityManagerFactory();
   }
 
+  /**
+   * Retrieves a synchronized instance of EntityManager.
+   *
+   * @return An instance of EntityManager created by the EntityManagerFactory.
+   */
   private synchronized EntityManager getEntityManager() {
     return getEntityManagerFactory().createEntityManager();
   }
 
+  /**
+   * Retrieves the configured EntityManagerFactory instance.
+   *
+   * @return The configured EntityManagerFactory instance.
+   */
   private EntityManagerFactory getEntityManagerFactory() {
     return entityManagerFactory;
   }
 
+  /**
+   * Retrieves the class type of the entity managed by this repository.
+   *
+   * @return The class type of the entity.
+   */
   private Class<T> getEntityClass() {
     return ReflectionUtils.getGenericParamAt(getClass(), 0);
   }
 
+  /**
+   * Retrieves the class type of the key used in the repository.
+   *
+   * @return The class type of the key.
+   */
   private Class<R> getKeyClass() {
     return ReflectionUtils.getGenericParamAt(getClass(), 1);
   }
@@ -91,6 +151,15 @@ public abstract class AbstractJPARepository<T, R>
     }
   }
 
+  /**
+   * Extracts the key from the given entity using reflection to find the field
+   * annotated with {@link jakarta.persistence.Id}.
+   *
+   * @param entity The entity from which to extract the key.
+   * @return The extracted key if the field exists and is of the correct type,
+   *         or null otherwise.
+   * @throws RuntimeException If an exception occurs while accessing the field.
+   */
   private R extractKey(T entity) {
     Field f = ReflectionUtils.getFieldWithAnnotation(getEntityClass(),
                                                      Id.class);
